@@ -1,11 +1,6 @@
 from models import Quiz, Question, AnswerOption, Level
 import json
 
-data = json.load(open('source.json'))
-
-for d in data:
-    print(d['questions'])
-
 # QUESTION 1
 answer_option1_question1 = AnswerOption(1, "Carambola", False, 20)
 answer_option2_question1 = AnswerOption(2, "Amoras", False, 20)
