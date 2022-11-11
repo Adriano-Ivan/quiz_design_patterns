@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quiz</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}"/>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li>
+                <a href="#">Escolher outro quiz</a>
+            </li>
+        </ul>
+    </nav>
+    {% block content %} {% endblock %}
+
+     <script type="text/javascript" src="{{ url_for('static', filename='jquery.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

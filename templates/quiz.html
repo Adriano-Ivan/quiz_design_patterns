@@ -1,0 +1,25 @@
+{% extends "template.html" %}
+
+{% block content %}
+
+<h1>QUIZ</h1>
+
+<div class="container">
+    <h2>{{ question.question_content}}</h2>
+
+    <div class="container_question">
+        <a href="{{ url_for('previous',current_question = current_question) }}">Anterior</a>
+        <form class="question_options">
+            {% for answer_option in question.answer_options %}
+            <div>
+                <input type="radio" id="{{question.id}}_{{answer_option.id}}" name="question"/>
+                <span>  {{ answer_option.description }}</span>
+            </div>
+            {% endfor %}
+        </form>
+        <a href="{{ url_for('next',current_question = current_question) }}">Prosseguir</a>
+    </div>
+
+</div>
+
+{% endblock %}

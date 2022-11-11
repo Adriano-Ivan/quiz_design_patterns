@@ -1,0 +1,8 @@
+
+.container_question {
+    display: flex;
+}
+
+.question_answer_option{
+    padding:10px;
+}
