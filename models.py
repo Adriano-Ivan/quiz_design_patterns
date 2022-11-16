@@ -10,7 +10,6 @@ class Quiz():
         self.max_pontation = None
 
     def return_question(self,nextQuestion):
-        print(nextQuestion)
         if(nextQuestion is not None and len(self.questions) > nextQuestion):
             return self.questions[nextQuestion]
         else:
