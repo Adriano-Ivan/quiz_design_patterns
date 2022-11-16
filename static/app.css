@@ -6,3 +6,7 @@
 .question_answer_option{
     padding:10px;
 }
+
+.correct_answer {
+    background-color:#0f0;
+}

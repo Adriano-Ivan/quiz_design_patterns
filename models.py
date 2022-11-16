@@ -9,14 +9,14 @@ class Quiz():
         self.total_pontuation_after_end = None
         self.max_pontation = None
 
-    def returnQuestion(self,nextQuestion):
+    def return_question(self,nextQuestion):
         print(nextQuestion)
         if(nextQuestion is not None and len(self.questions) > nextQuestion):
             return self.questions[nextQuestion]
         else:
             return self.questions[0]
 
-    def nextQuestionExists(self, nextQuestion):
+    def next_question_exists(self, nextQuestion):
         return len(self.questions) > nextQuestion
 
 
