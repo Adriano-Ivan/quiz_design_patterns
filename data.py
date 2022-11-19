@@ -1,41 +1,73 @@
 from models import Quiz, Question, AnswerOption, Level
 import json
+from models import Level, QuizTheme
 
-# QUESTION 1
-answer_option1_question1 = AnswerOption(1, "Carambola", False, 20)
-answer_option2_question1 = AnswerOption(2, "Amoras", False, 20)
-answer_option3_question1= AnswerOption(3, "Uvas", True, 20)
+quiz_list = []
 
-answer_options_question1 = [answer_option3_question1, answer_option2_question1,answer_option1_question1]
+current_quiz = None
 
-question1 = Question(20, 1, Level.MEDIUM,"Qual a fruta de Dionísio ?",answer_options_question1)
+arq = open("source.json", "r", encoding="utf-8")
+quiz_list_data = json.load(arq)
 
-# QUESTION 2
-answer_option1_question2 = AnswerOption(4, "Dionísio", False, 21)
-answer_option2_question2 = AnswerOption(5, "Apolo", False, 21)
-answer_option3_question2= AnswerOption(6, "Hermes", True, 21)
+if len(quiz_list) == 0:
+    for quiz in quiz_list_data:
+        quiz_object = quiz
 
-answer_options_question2 = [answer_option1_question2,answer_option2_question2,answer_option3_question2]
+        quiz_id = quiz_object['id']
+        quiz_title = quiz_object['title']
+        quiz_questions = []
 
-question2=Question(21, 1, Level.MEDIUM,
-                   "Qual é o deus patrono das artes, diplomacia, comércio e medicina ?",
-                   answer_options_question2)
+        category_quiz = None
 
-# QUESTION 3
-answer_option1_question3 = AnswerOption(7, "Ártemis", False, 22)
-answer_option2_question3 = AnswerOption(8, "Apolo", True, 22)
-answer_option3_question3= AnswerOption(9, "Ares", False, 22)
+        if quiz_object['category_quiz'] == 1:
+            category_quiz = QuizTheme.GREEK_MITHOLOGY
 
-answer_options_question2 = [answer_option1_question3,answer_option2_question3,answer_option3_question3]
+        for question in quiz_object['questions']:
+            question_id = question['id']
+            question_quiz_id = question['quiz_id']
+            question_content = question['question_content']
 
-question3=Question(22, 1, Level.MEDIUM,
-                   "Qual é a divindade relacionanda à música ?",
-                   answer_options_question2)
+            question_level = None
+            question_level_int = question['level']
+            question_answer_options = []
 
-# QUIZ 1
+            if question_level_int == 1:
+                question_level = Level.EASY
+            elif question_level_int == 2:
+                question_level = Level.MEDIUM
+            elif question_level_int == 3:
+                question_level = Level.DIFFICULT
+            elif question_level_int == 4:
+                question_level = Level.SUPER_CHALLENGE
 
-questions = [question1, question2,question3]
+            for answer_option in question['answer_options']:
+                answer_option_to_insert = AnswerOption(
+                    answer_option["id"], answer_option["description"],
+                    answer_option["is_right_answer"], answer_option["question_id"]
+                )
 
-quiz1 = Quiz(1, "Mitologia grega", questions)
+                question_answer_options.append(answer_option_to_insert)
 
-current_quiz = quiz1
+            question_to_insert = Question(question_id, question_quiz_id,
+                                          question_level, question_content, question_answer_options)
+
+            quiz_questions.append(question_to_insert)
+
+        quiz_to_insert = Quiz(quiz_id, quiz_title, quiz_questions)
+        quiz_to_insert.category_quiz = category_quiz
+        quiz_list.append(quiz_to_insert)
+
+
+class QuizFactory:
+    @staticmethod
+    def return_quiz(type):
+        quiz_to_choose = None
+        for quiz in quiz_list:
+            if quiz.category_quiz == type:
+                quiz_to_choose = quiz
+                break
+
+        return quiz_to_choose
+
+
+current_quiz = QuizFactory.return_quiz(QuizTheme.GREEK_MITHOLOGY)

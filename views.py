@@ -15,7 +15,6 @@ def previous_question():
     next_question_req = int(request.form["previous_question"])
     current_question = next_question_req - 2 if current_quiz.question_exists(next_question_req - 1) else 0
 
-    print(current_question)
     return return_question_service(current_question, next_question_req - 1)
 
 

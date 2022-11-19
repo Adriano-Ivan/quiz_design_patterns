@@ -11,7 +11,6 @@ def return_question_service(current_question, current_question_to_search_after_t
         "next_question_exists": current_quiz.question_exists(current_question_to_search_after_this if current_question is not None else 0)
     }
 
-    print(object_to_jsonify)
     response = jsonify(object_to_jsonify)
 
     response.headers.set('Cache-Control', 'no-cache, no-store, must-revalidate')

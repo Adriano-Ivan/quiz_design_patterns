@@ -1,12 +1,95 @@
 [
   {
-    "quiz": {
-      "questions": [
-        {
-          "id": 2,
-          "content": "Teste"
-        }
-      ]
-    }
+    "id": 1,
+    "category_quiz": 1,
+    "title": "Mitologia grega",
+    "total_punctuation_after_end": null,
+    "max_punctuation": null,
+    "questions": [
+      {
+        "id": 20,
+        "quiz_id": 1,
+        "question_content": "Qual a fruta de Dionísio ?",
+        "level": 2,
+        "answer_options": [
+          {
+            "id": 3,
+            "description": "Uvas",
+            "is_right_answer": true,
+            "question_id": 20
+          },
+          {
+            "id": 2,
+            "description": "Amoras",
+            "is_right_answer": false,
+            "question_id": 20
+          },
+          {
+            "id": 1,
+            "description": "Carambola",
+            "is_right_answer": false,
+            "question_id": 20
+          }
+        ],
+        "right_answer_id": null,
+        "punctuation_for_right_answer": null
+      },
+      {
+        "id": 21,
+        "quiz_id": 1,
+        "question_content": "Qual é o deus patrono das artes, diplomacia, comércio e medicina ?",
+        "level": 2,
+        "answer_options": [
+          {
+            "id": 6,
+            "description": "Hermes",
+            "is_right_answer": true,
+            "question_id": 21
+          },
+          {
+            "id": 5,
+            "description": "Apolo",
+            "is_right_answer": false,
+            "question_id": 21
+          },
+          {
+            "id":4,
+            "description": "Dionísio",
+            "is_right_answer": false,
+            "question_id": 21
+          }
+        ],
+        "right_answer_id": null,
+        "punctuation_for_right_answer": null
+      },
+      {
+        "id": 22,
+        "quiz_id": 1,
+        "question_content": "Qual é a divindade relacionanda à música ?",
+        "level": 2,
+        "answer_options": [
+          {
+            "id": 7,
+            "description": "Ártemis",
+            "is_right_answer": false,
+            "question_id": 22
+          },
+          {
+            "id": 8,
+            "description": "Apolo",
+            "is_right_answer": true,
+            "question_id": 22
+          },
+          {
+            "id": 9,
+            "description": "Ares",
+            "is_right_answer": false,
+            "question_id": 22
+          }
+        ],
+        "right_answer_id": null,
+        "punctuation_for_right_answer": null
+      }
+    ]
   }
 ]

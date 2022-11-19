@@ -12,7 +12,6 @@ class Quiz():
 
     def return_question(self,nextQuestion):
         if(nextQuestion is not None and len(self.questions) > nextQuestion):
-            print(self.questions[0].level)
             return self.questions[nextQuestion]
         else:
             return self.questions[0]
@@ -30,7 +29,8 @@ class Question(object):
         self.level = level
         self.answer_options = answer_options
         self.right_answer_id = None
-        self.pontuation_for_right_answer = None
+        self.punctuation_for_right_answer = None
+        self.category_quiz = None
 
     def to_dict(self):
         return {
@@ -40,7 +40,7 @@ class Question(object):
             "answer_options": self.return_answer_options(),
             "level": json.dumps(self.level),
             "right_answer_id": self.right_answer_id,
-            "pontuation_for_right_answer": self.pontuation_for_right_answer
+            "punctuation_for_right_answer": self.punctuation_for_right_answer
         }
 
     def return_answer_options(self):
