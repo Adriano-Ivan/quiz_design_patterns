@@ -1,12 +1,12 @@
 [
-{
-  "quiz": {
-    "questions": [
-      {
-        "id": 2,
-        "content": "Teste"
-      }
-    ]
+  {
+    "quiz": {
+      "questions": [
+        {
+          "id": 2,
+          "content": "Teste"
+        }
+      ]
+    }
   }
-}
 ]

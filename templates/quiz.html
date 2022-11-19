@@ -5,28 +5,22 @@
 <h1>QUIZ</h1>
 
 <div class="container">
-    <h2>{{ question.question_content}}</h2>
+    <h2 id="question_text"></h2>
 
-    <div class="container_question">
-        <a href="{{ url_for('previous',current_question = current_question) }}">Anterior</a>
-        <form class="question_options">
-            {% for answer_option in question.answer_options %}
-            <div id="question_{{question.id}}_{{answer_option.id}}">
-                <input class="question_answer_option" type="radio" id="{{question.id}}_{{answer_option.id}}" name="question"/>
-                <span>  {{ answer_option.description }}</span>
-            </div>
-            {% endfor %}
+    <div class="container_questions">
+        <button id="button_previous_question">Anterior</button>
+
+        <form class="question_options" id="question_options">
+
         </form>
-        {% if next_question_exists%}
-            <a href="{{ url_for('next',current_question = current_question) }}">Prosseguir</a>
-        {% endif %}
+
+        <button id="button_next_question">Próxima</button>
     </div>
 
-    {% if not next_question_exists %}
     <button id="show_results_button">
         Mostrar resultado
     </button>
-    {% endif %}
+
 </div>
 
 {% endblock %}

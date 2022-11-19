@@ -1,29 +1,30 @@
-from flask import Flask
-from flask import render_template,redirect,request,url_for
-from data import quiz1
+from flask import render_template, request
+from data import current_quiz
 from app import app
 from flask import jsonify
+from services import return_question_service
+
 
 @app.route("/")
 def index():
-    current_question = request.args.get('current_question')
+    return render_template("quiz.html")
 
-    if current_question:
-        current_question = int(current_question)
 
-    return render_template("quiz.html",question = quiz1.return_question(current_question),
-                           next_question_exists=quiz1.next_question_exists(current_question+1 if current_question is not None else 0),
-                           current_question = current_question if current_question is not None else 0)
+@app.route("/previous_question", methods=["POST"])
+def previous_question():
+    next_question_req = int(request.form["previous_question"])
+    current_question = next_question_req - 2 if current_quiz.question_exists(next_question_req - 1) else 0
 
-@app.route("/next/<int:current_question>")
-def next(current_question):
-    return redirect(url_for("index",
-                            current_question=current_question+1
-                            if quiz1.next_question_exists(current_question+1) else 0))
+    print(current_question)
+    return return_question_service(current_question, next_question_req - 1)
 
-@app.route("/previous/<int:current_question>")
-def previous(current_question):
-    return redirect(url_for("index",current_question=current_question-1 if current_question -1 >= 0 else 0))
+
+@app.route("/next_question", methods=["POST"])
+def next_question():
+    next_question_req = int(request.form["next_question"])
+    current_question = next_question_req if current_quiz.question_exists(next_question_req) else 0
+
+    return return_question_service(current_question, current_question+1)
 
 
 @app.route("/verify_answer", methods=["POST"])
@@ -32,14 +33,10 @@ def verify_answer():
     option_id = int(request.form['option_id'])
     is_correct = False
 
-    print(question_id)
-    print(option_id)
-
-    for question in quiz1.questions:
+    for question in current_quiz.questions:
         for option in question.answer_options:
             if question.id == question_id and option.id == option_id and option.is_right_answer:
                 is_correct = True
                 break
 
     return jsonify(is_correct)
-

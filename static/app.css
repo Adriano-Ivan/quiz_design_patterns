@@ -1,10 +1,19 @@
 
-.container_question {
+.container_questions {
     display: flex;
 }
 
 .question_answer_option{
     padding:10px;
+}
+
+.hide {
+    display: none;
+}
+
+.question_options{
+    display:flex;
+    flex-direction: column;
 }
 
 .correct_answer {
