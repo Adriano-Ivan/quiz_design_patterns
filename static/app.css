@@ -19,3 +19,11 @@
 .correct_answer {
     background-color:#0f0;
 }
+
+.hidden_warning_of_not_answered{
+    display: none
+}
+
+.hidden_content_feedback {
+    display: none;
+}

@@ -1,6 +1,7 @@
 // Values
 let correctAnswers = [];
 let indexQuestion = 0;
+let numberOfQuestions = 0;
 
 // DOM Elements
 let showResultsButton = document.querySelector("#show_results_button");
@@ -9,14 +10,18 @@ let questionOptions = document.querySelector("#question_options");
 let buttonNextQuestion = document.querySelector("#button_next_question");
 let buttonPreviousQuestion = document.querySelector("#button_previous_question");
 
+let warningOfNotInsufficientAnsweredQuestions = document.querySelector("#warning_of_not_answered");
+let contentFeedback = document.querySelector("#content_feedback");
+
 // Functions
-const updateAuxListForCorrectAndWrongAnswers = (is_correct,question_id,option_id) =>{
+const updateAuxListForCorrectAndWrongAnswers = (is_correct,description,question_id,option_id) =>{
     let theQuestionWasAlreadyAnswered = false;
 
     for(let i = 0; i < correctAnswers.length; i++){
         if(correctAnswers[i].question_id == question_id){
             correctAnswers[i].is_correct = is_correct;
             correctAnswers[i].answer_id = option_id;
+            correctAnswers[i].description = description;
 
             theQuestionWasAlreadyAnswered = true;
             break;
@@ -28,17 +33,40 @@ const updateAuxListForCorrectAndWrongAnswers = (is_correct,question_id,option_id
             {
                 question_id : question_id,
                 answer_id: option_id,
-                is_correct: is_correct
+                is_correct: is_correct,
+                description: description
             }
         );
     }
 
-    processResults();
 }
 
 const processResults = (e) => {
-    correctAnswers.forEach((ca)=>{
-        console.log(ca);
+    if(correctAnswers.length != numberOfQuestions){
+        warningOfNotInsufficientAnsweredQuestions.classList.remove("hidden_warning_of_not_answered");
+    } else {
+        contentFeedback.classList.remove("hidden_content_feedback");
+        const descriptionsOfCorrectAnswers = [];
+
+        correctAnswers.forEach((ca)=>{
+            if(ca.is_correct){
+                descriptionsOfCorrectAnswers.push(ca.description);
+            }
+        });
+
+        contentFeedback.textContent = `
+            Respostas corretas: ${descriptionsOfCorrectAnswers.map((a,i) => {
+                return ` ${a}`;
+            })}
+        `;
+    }
+}
+
+const captureNumberOfQuestions = () => {
+    var number = $.get("/number_of_questions");
+
+    number.done(function(returnedNumber){
+        numberOfQuestions = returnedNumber;
     });
 }
 
@@ -50,8 +78,8 @@ const processChangedOption = (e) => {
 
     var verify = $.post("/verify_answer", {"question_id": question_id, "option_id":option_id});
 
-    verify.done(function(is_correct){
-        updateAuxListForCorrectAndWrongAnswers(is_correct,question_id,option_id);
+    verify.done(function(data){
+        updateAuxListForCorrectAndWrongAnswers(data.is_correct,data.description,question_id,option_id);
     });
 }
 
@@ -146,6 +174,8 @@ $(function(){
 $(function(){
     $("#button_previous_question").on("click", function(e){
         if(indexQuestion >= 0){
+            contentFeedback.classList.add("hidden_content_feedback");
+            warningOfNotInsufficientAnsweredQuestions.classList.add("hidden_warning_of_not_answered");
             requestQuestion("previous_question");
         }
     });
@@ -158,6 +188,8 @@ $(function(){
 });
 
 requestQuestion("next_question");
+
+captureNumberOfQuestions();
 
 showResultsButton?.addEventListener("click", processResults)
 

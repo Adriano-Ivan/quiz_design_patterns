@@ -4,7 +4,6 @@ from app import app
 from flask import jsonify
 from services import return_question_service
 
-
 @app.route("/")
 def index():
     return render_template("quiz.html")
@@ -31,11 +30,19 @@ def verify_answer():
     question_id = int(request.form['question_id'])
     option_id = int(request.form['option_id'])
     is_correct = False
+    description = ""
 
     for question in current_quiz.questions:
         for option in question.answer_options:
+            if question.id == question_id and option.id == option_id:
+                description = option.description
+
             if question.id == question_id and option.id == option_id and option.is_right_answer:
                 is_correct = True
                 break
 
-    return jsonify(is_correct)
+    return jsonify({"is_correct": is_correct, "description": description})
+
+@app.route("/number_of_questions",methods=["GET"])
+def return_number_of_questions():
+    return jsonify(len(current_quiz.questions))
