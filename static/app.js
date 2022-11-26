@@ -62,6 +62,33 @@ const processResults = (e) => {
     }
 }
 
+const markPreviouslySelectedOption = () => {
+    const options = document.querySelectorAll('.question_answer_option');
+
+    for(let i = 0 ; i < options.length; i++){
+        let optionsWasFound = false;
+        for(let j = 0 ; j < correctAnswers.length;j++){
+            console.log(correctAnswers[j]);
+            console.log(options[i].id);
+
+            const answerInputId = options[i].id;
+
+            const questionId = Number(answerInputId.split("_")[0]);
+            const answerId = Number(answerInputId.split("_")[1]);
+
+            if(questionId == correctAnswers[j].question_id && answerId == correctAnswers[j].answer_id){
+                optionsWasFound = true;
+                options[i].checked = true;
+                break;
+             }
+        }
+
+        if(optionsWasFound){
+            break;
+        }
+    }
+}
+
 const captureNumberOfQuestions = () => {
     var number = $.get("/number_of_questions");
 
@@ -96,6 +123,8 @@ const requestQuestion = (previousOrNextQuestion) => {
 
         defineShowResultsVisibility(data.next_question_exists);
         defineNewQuestionAndAnswers(data.question);
+
+        markPreviouslySelectedOption();
     });
 }
 
@@ -177,6 +206,7 @@ $(function(){
             contentFeedback.classList.add("hidden_content_feedback");
             warningOfNotInsufficientAnsweredQuestions.classList.add("hidden_warning_of_not_answered");
             requestQuestion("previous_question");
+
         }
     });
 });
@@ -184,6 +214,7 @@ $(function(){
 $(function(){
     $("#button_next_question").on("click", function(e){
         requestQuestion("next_question");
+
     });
 });
 
