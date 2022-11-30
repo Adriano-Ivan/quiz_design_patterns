@@ -222,5 +222,14 @@ requestQuestion("next_question");
 
 captureNumberOfQuestions();
 
-showResultsButton?.addEventListener("click", processResults)
+showResultsButton?.addEventListener("click", processResults);
+
+
+const confirmExit = () =>{
+    console.log("gkjt")
+    return "Deseja realmente sair ? Seu progresso no quiz será perdido...";
+}
+
+window.onbeforeunload = confirmExit;
+
 
