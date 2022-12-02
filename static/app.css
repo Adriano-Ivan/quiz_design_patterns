@@ -1,7 +1,8 @@
 
 .container_questions {
     display: flex;
-    min-width: 850px !important;
+    justify-content: space-between;
+    min-width: 550px;
 }
 
 .question_answer_option{

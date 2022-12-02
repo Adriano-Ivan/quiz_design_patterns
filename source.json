@@ -31,7 +31,7 @@
             "question_id": 20
           }
         ],
-        "right_answer_id": null,
+        "right_answer_id": 3,
         "punctuation_for_right_answer": null
       },
       {
@@ -59,7 +59,7 @@
             "question_id": 21
           }
         ],
-        "right_answer_id": null,
+        "right_answer_id": 6,
         "punctuation_for_right_answer": null
       },
       {
@@ -87,7 +87,100 @@
             "question_id": 22
           }
         ],
-        "right_answer_id": null,
+        "right_answer_id": 8,
+        "punctuation_for_right_answer": null
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "category_quiz": 2,
+    "title": "Literatura",
+    "total_punctuation_after_end": null,
+    "max_punctuation": null,
+    "questions": [
+      {
+        "id": 32,
+        "quiz_id": 2,
+        "question_content": "Quem é a figura vilanesca de 'Meridiano de Sangue' ?",
+        "level": 3,
+        "answer_options": [
+          {
+            "id": 122,
+            "description": "Jaskier",
+            "is_right_answer": false,
+            "question_id": 32
+          },
+          {
+            "id": 134,
+            "description": "O Juiz",
+            "is_right_answer": true,
+            "question_id": 32
+          },
+          {
+            "id": 127,
+            "description": "Razumíkhin",
+            "is_right_answer": false,
+            "question_id": 32
+          }
+        ],
+        "right_answer_id": 134,
+        "punctuation_for_right_answer": null
+      },
+      {
+        "id": 36,
+        "quiz_id": 2,
+        "question_content": "Qual deles Tolstói escreveu ?",
+        "level": 2,
+        "answer_options": [
+          {
+            "id": 76,
+            "description": "Os demônios",
+            "is_right_answer": false,
+            "question_id": 36
+          },
+          {
+            "id": 72,
+            "description": "O nariz",
+            "is_right_answer": false,
+            "question_id": 36
+          },
+          {
+            "id":79,
+            "description": "Guerra e paz",
+            "is_right_answer": true,
+            "question_id": 36
+          }
+        ],
+        "right_answer_id": 79,
+        "punctuation_for_right_answer": null
+      },
+      {
+        "id": 42,
+        "quiz_id":2,
+        "question_content": "Qual é a saga dos Atreides ?",
+        "level": 2,
+        "answer_options": [
+          {
+            "id": 96,
+            "description": "As Brumas de Avalon",
+            "is_right_answer": false,
+            "question_id": 42
+          },
+          {
+            "id":93,
+            "description": "The Witcher",
+            "is_right_answer": false,
+            "question_id": 42
+          },
+          {
+            "id": 95,
+            "description": "Duna",
+            "is_right_answer": true,
+            "question_id": 42
+          }
+        ],
+        "right_answer_id": 95,
         "punctuation_for_right_answer": null
       }
     ]

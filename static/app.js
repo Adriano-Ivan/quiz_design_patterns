@@ -4,14 +4,17 @@ let indexQuestion = 0;
 let numberOfQuestions = 0;
 
 // DOM Elements
-let showResultsButton = document.querySelector("#show_results_button");
-let questionOptions = document.querySelector("#question_options");
+const showResultsButton = document.querySelector("#show_results_button");
+const questionOptions = document.querySelector("#question_options");
 
-let buttonNextQuestion = document.querySelector("#button_next_question");
-let buttonPreviousQuestion = document.querySelector("#button_previous_question");
+const buttonNextQuestion = document.querySelector("#button_next_question");
+const buttonPreviousQuestion = document.querySelector("#button_previous_question");
 
-let warningOfNotInsufficientAnsweredQuestions = document.querySelector("#warning_of_not_answered");
-let contentFeedback = document.querySelector("#content_feedback");
+const warningOfNotInsufficientAnsweredQuestions = document.querySelector("#warning_of_not_answered");
+const contentFeedback = document.querySelector("#content_feedback");
+
+const changeQuizButton = document.querySelector("#change-quiz-button");
+const optionsQuiz = document.querySelector("#options_quiz");
 
 // Functions
 const updateAuxListForCorrectAndWrongAnswers = (is_correct,description,question_id,option_id) =>{
@@ -45,6 +48,7 @@ const processResults = (e) => {
     if(correctAnswers.length != numberOfQuestions){
         warningOfNotInsufficientAnsweredQuestions.classList.remove("hidden_warning_of_not_answered");
     } else {
+        warningOfNotInsufficientAnsweredQuestions.classList.add("hidden_warning_of_not_answered");
         contentFeedback.classList.remove("hidden_content_feedback");
         const descriptionsOfCorrectAnswers = [];
 
@@ -62,14 +66,54 @@ const processResults = (e) => {
     }
 }
 
+const showQuizOptions = () => {
+    var dataQuizTypes = $.get("/list_quizes");
+
+    dataQuizTypes.done(function(data){
+       optionsQuiz.classList.remove("hide");
+
+       const typesQuizChildren = document.querySelectorAll(".types_quiz_child");
+
+       typesQuizChildren?.forEach((c) => {
+            optionsQuiz.removeChild(c);
+       });
+
+        data.types.forEach((c) => {
+        const typeQuizChild = document.createElement("button");
+        typeQuizChild.classList.add("types_quiz_child");
+
+        typeQuizChild.textContent = `${quizTypes[c]}`;
+
+        typeQuizChild.addEventListener("click", function(e){
+              var changeQuiz = $.post("/change_quiz", {"quiz_type": c});
+
+              changeQuiz.done(function(data){
+                if(data.type !== null){
+                    correctAnswers = [];
+                    indexQuestion = 0;
+                    numberOfQuestions = 0;
+
+                    requestQuestion("next_question");
+                }
+              });
+
+              captureNumberOfQuestions();
+              contentFeedback.classList.add("hidden_content_feedback");
+              warningOfNotInsufficientAnsweredQuestions.classList.add("hidden_warning_of_not_answered");
+        });
+
+        optionsQuiz.appendChild(typeQuizChild);
+       });
+
+    });
+}
+
 const markPreviouslySelectedOption = () => {
     const options = document.querySelectorAll('.question_answer_option');
 
     for(let i = 0 ; i < options.length; i++){
         let optionsWasFound = false;
         for(let j = 0 ; j < correctAnswers.length;j++){
-            console.log(correctAnswers[j]);
-            console.log(options[i].id);
 
             const answerInputId = options[i].id;
 
@@ -224,9 +268,9 @@ captureNumberOfQuestions();
 
 showResultsButton?.addEventListener("click", processResults);
 
+changeQuizButton.addEventListener("click", showQuizOptions);
 
 const confirmExit = () =>{
-    console.log("gkjt")
     return "Deseja realmente sair ? Seu progresso no quiz será perdido...";
 }
 

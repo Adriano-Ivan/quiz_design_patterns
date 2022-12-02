@@ -10,13 +10,18 @@
     <nav>
         <ul>
             <li>
-                <a href="#">Escolher outro quiz</a>
+                <button id="change-quiz-button" class="btn btn-info">Escolher outro quiz</button>
             </li>
         </ul>
     </nav>
+
+    <ul id="options_quiz" class="hide">
+
+    </ul>
     {% block content %} {% endblock %}
 
      <script type="text/javascript" src="{{ url_for('static', filename='jquery.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='aux_content.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='app.js') }}"></script>
 </body>
 </html>
