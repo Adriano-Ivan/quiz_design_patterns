@@ -1,20 +1,46 @@
 from enum import IntEnum
 import json
+from flask import jsonify
 
+# Facade design pattern
 class Quiz():
 
-    def __init__(self,id,title,  questions):
+    def __init__(self, id, title,  questions):
         self.id = id
         self.title = title
         self.questions = questions
         self.total_pontuation_after_end = None
         self.max_pontation = None
 
-    def return_question(self,nextQuestion):
+    def return_question(self,current_question, current_question_to_search_after_this):
+        current_question_to_send = self._return_question_based_on_parameter(current_question)
+
+        object_to_jsonify = {
+            "next_question": current_question_to_search_after_this if current_question_to_search_after_this != 0 else 1,
+            "question": current_question_to_send.to_dict(),
+            "next_question_exists": self.question_exists(
+                current_question_to_search_after_this if current_question is not None else 0)
+        }
+
+        response = jsonify(object_to_jsonify)
+
+        return response
+
+    def _return_question_based_on_parameter(self, nextQuestion):
         if(nextQuestion is not None and len(self.questions) > nextQuestion):
             return self.questions[nextQuestion]
         else:
             return self.questions[0]
+
+    def is_marked_option_correct(self, question_id, option_id):
+        for question in self.questions:
+            for option in question.answer_options:
+                if question.id == question_id and option.id == option_id and option.is_right_answer:
+                    description = option.description
+                    is_correct = True
+                    return {"description": description, "is_correct": is_correct}
+
+        return {"description": "", "is_correct": False}
 
     def question_exists(self, question_index):
         return len(self.questions) > question_index >= 0

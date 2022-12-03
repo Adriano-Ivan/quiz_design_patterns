@@ -58,6 +58,10 @@ const processResults = (e) => {
             }
         });
 
+        if(descriptionsOfCorrectAnswers.length == 0){
+            descriptionsOfCorrectAnswers.push(`Todas as respostas estão erradas`);
+        }
+
         contentFeedback.textContent = `
             Respostas corretas: ${descriptionsOfCorrectAnswers.map((a,i) => {
                 return ` ${a}`;

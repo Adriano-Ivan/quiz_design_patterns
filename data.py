@@ -4,6 +4,7 @@ from models import Level, QuizTheme
 
 current_type = QuizTheme.GREEK_MITHOLOGY
 
+# Facade pattern
 # Singleton pattern
 class QuizDataAccessor:
 
@@ -113,6 +114,10 @@ def change_quiz_with_new_type(received_type):
 
 def current_quiz():
     global current_quiz
-    current_quiz=QuizFactory.return_quiz(current_type)
+    current_quiz_to_define = QuizFactory.return_quiz(current_type)
+
+    if current_quiz_to_define is not None:
+        current_quiz = current_quiz_to_define
+
     return current_quiz
 
