@@ -4,6 +4,7 @@ let indexQuestion = 0;
 let numberOfQuestions = 0;
 
 // DOM Elements
+const containerQuiz = document.querySelector("#container_quiz");
 const showResultsButton = document.querySelector("#show_results_button");
 const questionOptions = document.querySelector("#question_options");
 
@@ -15,6 +16,8 @@ const contentFeedback = document.querySelector("#content_feedback");
 
 const changeQuizButton = document.querySelector("#change-quiz-button");
 const optionsQuiz = document.querySelector("#options_quiz");
+
+const titleQuiz = document.querySelector("#title_quiz");
 
 // Functions
 const updateAuxListForCorrectAndWrongAnswers = (is_correct,description,question_id,option_id) =>{
@@ -45,6 +48,8 @@ const updateAuxListForCorrectAndWrongAnswers = (is_correct,description,question_
 }
 
 const processResults = (e) => {
+    console.log(correctAnswers.length);
+    console.log(numberOfQuestions)
     if(correctAnswers.length != numberOfQuestions){
         warningOfNotInsufficientAnsweredQuestions.classList.remove("hidden_warning_of_not_answered");
     } else {
@@ -85,6 +90,9 @@ const showQuizOptions = () => {
         data.types.forEach((c) => {
         const typeQuizChild = document.createElement("button");
         typeQuizChild.classList.add("types_quiz_child");
+        typeQuizChild.classList.add("btn");
+        typeQuizChild.classList.add("btn-success");
+        typeQuizChild.classList.add("m-2");
 
         typeQuizChild.textContent = `${quizTypes[c]}`;
 
@@ -104,6 +112,7 @@ const showQuizOptions = () => {
               captureNumberOfQuestions();
               contentFeedback.classList.add("hidden_content_feedback");
               warningOfNotInsufficientAnsweredQuestions.classList.add("hidden_warning_of_not_answered");
+              containerQuiz.classList.remove("hide");
         });
 
         optionsQuiz.appendChild(typeQuizChild);
@@ -173,6 +182,10 @@ const requestQuestion = (previousOrNextQuestion) => {
         defineNewQuestionAndAnswers(data.question);
 
         markPreviouslySelectedOption();
+
+        captureNumberOfQuestions();
+
+        titleQuiz.textContent = `${data.title_quiz}`;
     });
 }
 
@@ -266,13 +279,12 @@ $(function(){
     });
 });
 
-requestQuestion("next_question");
-
 captureNumberOfQuestions();
 
 showResultsButton?.addEventListener("click", processResults);
 
-changeQuizButton.addEventListener("click", showQuizOptions);
+showQuizOptions();
+//changeQuizButton.addEventListener("click", showQuizOptions);
 
 const confirmExit = () =>{
     return "Deseja realmente sair ? Seu progresso no quiz será perdido...";

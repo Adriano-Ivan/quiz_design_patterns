@@ -7,18 +7,16 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}"/>
 </head>
 <body>
-    <nav>
-        <ul>
-            <li>
-                <button id="change-quiz-button" class="btn btn-info">Escolher outro quiz</button>
-            </li>
-        </ul>
-    </nav>
 
-    <ul id="options_quiz" class="hide">
+    <div class="card">
+        <div class="card-header">
+            <h2 id="change-quiz-button" class="card-title">Escolha um quiz</h2>
+            <ul id="options_quiz" class="hide">
 
-    </ul>
-    {% block content %} {% endblock %}
+            </ul>
+        </div>
+        {% block content %} {% endblock %}
+    </div>
 
      <script type="text/javascript" src="{{ url_for('static', filename='jquery.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='aux_content.js') }}"></script>

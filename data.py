@@ -3,8 +3,8 @@ import json
 from models import Level, QuizTheme
 
 current_type = QuizTheme.GREEK_MITHOLOGY
+current_quiz_obj = None
 
-# Facade pattern
 # Singleton pattern
 class QuizDataAccessor:
 
@@ -16,18 +16,18 @@ class QuizDataAccessor:
 
     def __new__(cls):
 
-        if cls._instance is None:
+        if cls._instance is None :
             cls._instance = super().__new__(cls)
             cls._define_data(cls)
 
         return cls._instance
 
-    def _define_data(self):
+    def _define_data(cls):
 
         arq = open("source.json", "r", encoding="utf-8")
         quiz_list_data = json.load(arq)
 
-        if len(self._quiz_list) == 0:
+        if len(cls._quiz_list) == 0:
             for quiz in quiz_list_data:
                 quiz_object = quiz
 
@@ -76,10 +76,10 @@ class QuizDataAccessor:
 
                 quiz_to_insert = Quiz(quiz_id, quiz_title, quiz_questions)
                 quiz_to_insert.category_quiz = category_quiz
-                self._quiz_list.append(quiz_to_insert)
+                cls._quiz_list.append(quiz_to_insert)
 
-    def get_data(self):
-        return self._quiz_list
+    def get_data(cls):
+        return cls._quiz_list
 
 
 # Factory pattern
@@ -101,11 +101,11 @@ def change_quiz_with_new_type(received_type):
     for member in QuizTheme:
         if member.name == received_type:
             new_theme = QuizTheme[received_type]
-            global current_quiz
-            current_quiz = QuizFactory.return_quiz(new_theme)
+            global current_quiz_obj
+            current_quiz_obj = QuizFactory.return_quiz(new_theme)
 
             global current_type
-            current_type=new_theme
+            current_type = new_theme
 
             return new_theme
 
@@ -113,11 +113,12 @@ def change_quiz_with_new_type(received_type):
 
 
 def current_quiz():
-    global current_quiz
-    current_quiz_to_define = QuizFactory.return_quiz(current_type)
+    global current_quiz_obj
+    current_quiz_to_define = QuizFactory.return_quiz(current_type
+                                                     if current_type is not None else QuizTheme.GREEK_MITHOLOGY )
 
     if current_quiz_to_define is not None:
-        current_quiz = current_quiz_to_define
+        current_quiz_obj = current_quiz_to_define
 
-    return current_quiz
+    return current_quiz_obj
 
