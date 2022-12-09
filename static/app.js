@@ -2,6 +2,7 @@
 let correctAnswers = [];
 let indexQuestion = 0;
 let numberOfQuestions = 0;
+let quizWasSelected = false;
 
 // DOM Elements
 const containerQuiz = document.querySelector("#container_quiz");
@@ -18,6 +19,7 @@ const changeQuizButton = document.querySelector("#change-quiz-button");
 const optionsQuiz = document.querySelector("#options_quiz");
 
 const titleQuiz = document.querySelector("#title_quiz");
+const quizWasNotSelectedMessage = document.querySelector("#quiz_was_not_selected_message");
 
 // Functions
 const updateAuxListForCorrectAndWrongAnswers = (is_correct,description,question_id,option_id) =>{
@@ -75,6 +77,14 @@ const processResults = (e) => {
     }
 }
 
+const toggleQuizWasNotSelectedMessage = () => {
+    if(quizWasSelected){
+        quizWasNotSelectedMessage.classList.add("hide");
+    } else {
+        quizWasNotSelectedMessage.classList.remove("hide");
+    }
+}
+
 const showQuizOptions = () => {
     var dataQuizTypes = $.get("/list_quizes");
 
@@ -106,6 +116,10 @@ const showQuizOptions = () => {
                     numberOfQuestions = 0;
 
                     requestQuestion("next_question");
+
+                    quizWasSelected = true;
+
+                    toggleQuizWasNotSelectedMessage();
                 }
               });
 

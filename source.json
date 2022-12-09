@@ -184,5 +184,98 @@
         "punctuation_for_right_answer": null
       }
     ]
+  },
+  {
+    "id": 3,
+    "category_quiz": 3,
+    "title": "Programação",
+    "total_punctuation_after_end": null,
+    "max_punctuation": null,
+    "questions": [
+      {
+        "id": 235,
+        "quiz_id": 3,
+        "question_content": "Ferramenta do front-end que segue o paradigma reativo",
+        "level": 2,
+        "answer_options": [
+          {
+            "id": 938,
+            "description": "Angular JS",
+            "is_right_answer": false,
+            "question_id": 235
+          },
+          {
+            "id": 823,
+            "description": "Razor",
+            "is_right_answer": false,
+            "question_id": 235
+          },
+          {
+            "id": 871,
+            "description": "React JS",
+            "is_right_answer": true,
+            "question_id": 235
+          }
+        ],
+        "right_answer_id":871,
+        "punctuation_for_right_answer": null
+      },
+      {
+        "id": 312,
+        "quiz_id": 3,
+        "question_content": "Linguagem de marcação de hipertexto",
+        "level": 1,
+        "answer_options": [
+          {
+            "id": 481,
+            "description": "CSS",
+            "is_right_answer": false,
+            "question_id": 312
+          },
+          {
+            "id":494,
+            "description": "HTML",
+            "is_right_answer": true,
+            "question_id": 312
+          },
+          {
+            "id":511,
+            "description": "Python",
+            "is_right_answer":false,
+            "question_id": 312
+          }
+        ],
+        "right_answer_id": 494,
+        "punctuation_for_right_answer": null
+      },
+      {
+        "id": 728,
+        "quiz_id":3,
+        "question_content": "Interface de Programação de Aplicação",
+        "level": 2,
+        "answer_options": [
+          {
+            "id":1028,
+            "description": "DDL",
+            "is_right_answer": false,
+            "question_id": 728
+          },
+          {
+            "id":1038,
+            "description": "LINQ",
+            "is_right_answer": false,
+            "question_id":728
+          },
+          {
+            "id": 1087,
+            "description": "API",
+            "is_right_answer": true,
+            "question_id": 728
+          }
+        ],
+        "right_answer_id": 1087,
+        "punctuation_for_right_answer": null
+      }
+    ]
   }
 ]

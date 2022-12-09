@@ -43,6 +43,9 @@ class QuizDataAccessor:
                 if quiz_object['category_quiz'] == 2:
                     category_quiz = QuizTheme.LITERATURE
 
+                if quiz_object['category_quiz'] == 3:
+                    category_quiz = QuizTheme.PROGRAMMING
+
                 for question in quiz_object['questions']:
                     question_id = question['id']
                     question_quiz_id = question['quiz_id']
