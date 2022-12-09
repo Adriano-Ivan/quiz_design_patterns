@@ -50,8 +50,7 @@ const updateAuxListForCorrectAndWrongAnswers = (is_correct,description,question_
 }
 
 const processResults = (e) => {
-    console.log(correctAnswers.length);
-    console.log(numberOfQuestions)
+ 
     if(correctAnswers.length != numberOfQuestions){
         warningOfNotInsufficientAnsweredQuestions.classList.remove("hidden_warning_of_not_answered");
     } else {
@@ -135,6 +134,17 @@ const showQuizOptions = () => {
     });
 }
 
+const definePickedOptionAppearance =  (question_id, option_id) =>{
+    const pickedOption = document.querySelector(".picked_option");
+
+    if(pickedOption){
+        pickedOption.classList.remove("picked_option");
+    }
+
+    const selectedOptionToMark = document.querySelector(`#span_${question_id}_${option_id}`);
+    selectedOptionToMark.classList.add("picked_option");
+}
+
 const markPreviouslySelectedOption = () => {
     const options = document.querySelectorAll('.question_answer_option');
 
@@ -150,6 +160,7 @@ const markPreviouslySelectedOption = () => {
             if(questionId == correctAnswers[j].question_id && answerId == correctAnswers[j].answer_id){
                 optionsWasFound = true;
                 options[i].checked = true;
+                definePickedOptionAppearance(questionId, answerId);
                 break;
              }
         }
@@ -171,8 +182,10 @@ const captureNumberOfQuestions = () => {
 const processChangedOption = (e) => {
     e.preventDefault();
 
-    const question_id = e.target.id.split("_")[0]
-    const option_id = e.target.id.split("_")[1]
+    const question_id = e.target.id.split("_")[0];
+    const option_id = e.target.id.split("_")[1];
+
+    definePickedOptionAppearance(question_id,option_id);
 
     var verify = $.post("/verify_answer", {"question_id": question_id, "option_id":option_id});
 
@@ -250,16 +263,18 @@ const defineNewQuestionAndAnswers = (question) => {
         newContainerQuestionOption.id = `question_${questionId}_${option.id}`;
 
         // Creating container children
+        const textSpan = document.createElement("span");
+        textSpan.textContent = option.description;
+        textSpan.id = `span_${questionId}_${option.id}`;
+
         const radioButton = document.createElement("input");
         radioButton.classList.add("question_answer_option");
         radioButton.id = `${questionId}_${option.id}`;
         radioButton.setAttribute("type","radio");
         radioButton.setAttribute("name","question");
+        radioButton.classList.add("hide");
 
         radioButton.addEventListener("change",processChangedOption);
-
-        const textSpan = document.createElement("span");
-        textSpan.textContent = option.description;
 
         // Adding children elements to container
         newContainerQuestionOption.appendChild(radioButton);
