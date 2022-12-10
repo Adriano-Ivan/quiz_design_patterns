@@ -3,14 +3,17 @@ let correctAnswers = [];
 let indexQuestion = 0;
 let numberOfQuestions = 0;
 let quizWasSelected = false;
+let containerQuestionIndicationsMapping = [];
+let quizWasFinished = false;
 
 // DOM Elements
 const containerQuiz = document.querySelector("#container_quiz");
 const showResultsButton = document.querySelector("#show_results_button");
+const restartQuizButton = document.querySelector("#restart_quiz_button");
 const questionOptions = document.querySelector("#question_options");
 
-const buttonNextQuestion = document.querySelector("#button_next_question");
-const buttonPreviousQuestion = document.querySelector("#button_previous_question");
+//const buttonNextQuestion = document.querySelector("#button_next_question");
+//const buttonPreviousQuestion = document.querySelector("#button_previous_question");
 
 const warningOfNotInsufficientAnsweredQuestions = document.querySelector("#warning_of_not_answered");
 const contentFeedback = document.querySelector("#content_feedback");
@@ -20,6 +23,8 @@ const optionsQuiz = document.querySelector("#options_quiz");
 
 const titleQuiz = document.querySelector("#title_quiz");
 const quizWasNotSelectedMessage = document.querySelector("#quiz_was_not_selected_message");
+
+const containerQuestionIndications = document.querySelector("#container_question_indication");
 
 // Functions
 const updateAuxListForCorrectAndWrongAnswers = (is_correct,description,question_id,option_id) =>{
@@ -49,8 +54,8 @@ const updateAuxListForCorrectAndWrongAnswers = (is_correct,description,question_
 
 }
 
-const processResults = (e) => {
- 
+const processResults = () => {
+
     if(correctAnswers.length != numberOfQuestions){
         warningOfNotInsufficientAnsweredQuestions.classList.remove("hidden_warning_of_not_answered");
     } else {
@@ -107,6 +112,8 @@ const showQuizOptions = () => {
 
         typeQuizChild.addEventListener("click", function(e){
               var changeQuiz = $.post("/change_quiz", {"quiz_type": c});
+              quizWasFinished = false;
+              removeQuestionIndications();
 
               changeQuiz.done(function(data){
                 if(data.type !== null){
@@ -122,7 +129,7 @@ const showQuizOptions = () => {
                 }
               });
 
-              captureNumberOfQuestions();
+              captureNumberOfQuestions(true);
               contentFeedback.classList.add("hidden_content_feedback");
               warningOfNotInsufficientAnsweredQuestions.classList.add("hidden_warning_of_not_answered");
               containerQuiz.classList.remove("hide");
@@ -162,7 +169,7 @@ const markPreviouslySelectedOption = () => {
                 options[i].checked = true;
                 definePickedOptionAppearance(questionId, answerId);
                 break;
-             }
+            }
         }
 
         if(optionsWasFound){
@@ -171,26 +178,91 @@ const markPreviouslySelectedOption = () => {
     }
 }
 
-const captureNumberOfQuestions = () => {
+const removeQuestionIndications = () => {
+    const questionIndications = containerQuestionIndications.querySelectorAll(".span_question_indication");
+
+    questionIndications.forEach((questionIndication)=>{
+        containerQuestionIndications.removeChild(questionIndication);
+    });
+}
+
+const defineQuestionIndications = (quantity) => {
+    const newIndicationMappings = [];
+
+    for(let i = 0; i < quantity;i++){
+        const spanNumber = document.createElement("span");
+
+        spanNumber.id = `span_question_indication_${i + 1}`;
+        spanNumber.classList.add("span_question_indication");
+        spanNumber.textContent = i + 1;
+
+        const objectForMapping = {nextQuestionForCurrent: i+1};
+        newIndicationMappings.push(objectForMapping);
+
+        containerQuestionIndications.appendChild(spanNumber);
+    }
+
+    containerQuestionIndicationsMapping = [...newIndicationMappings];
+}
+
+const captureNumberOfQuestions = (isToDefineContainerIndicators) => {
     var number = $.get("/number_of_questions");
 
     number.done(function(returnedNumber){
         numberOfQuestions = returnedNumber;
+
+        if(isToDefineContainerIndicators){
+            defineQuestionIndications(numberOfQuestions);
+        }
     });
 }
 
-const processChangedOption = (e) => {
+const processChangedOption = (e,nextQuestionExists) => {
     e.preventDefault();
 
-    const question_id = e.target.id.split("_")[0];
-    const option_id = e.target.id.split("_")[1];
+    const questionIdFromInput = e.target.id.split("_")[0];
+    const optionIdFromInput = e.target.id.split("_")[1];
+    const nextQuestionFromInput = e.target.id.split("_")[2];
 
-    definePickedOptionAppearance(question_id,option_id);
+    definePickedOptionAppearance(questionIdFromInput,optionIdFromInput );
 
-    var verify = $.post("/verify_answer", {"question_id": question_id, "option_id":option_id});
+    var verify = $.post("/verify_answer", {"question_id": questionIdFromInput, "option_id":optionIdFromInput});
 
     verify.done(function(data){
-        updateAuxListForCorrectAndWrongAnswers(data.is_correct,data.description,question_id,option_id);
+        updateAuxListForCorrectAndWrongAnswers(data.is_correct,data.description,questionIdFromInput,optionIdFromInput);
+
+        updateQuestionIndicationContainer(nextQuestionFromInput,data.is_correct,nextQuestionExists);
+    });
+}
+
+const updateQuestionIndicationContainer = (nextQuestionFromInput, answerIsCorrect,nextQuestionExists) => {
+    containerQuestionIndicationsMapping.forEach((mapping) => {
+        if(mapping.nextQuestionForCurrent === Number(nextQuestionFromInput)){
+            mapping.answerWasCorrect = answerIsCorrect;
+
+            const questionIndicator = document.querySelector(`#span_question_indication_${mapping.nextQuestionForCurrent}`);
+
+            if(mapping.answerWasCorrect){
+                questionIndicator.classList.remove('indicator_that_was_wrong');
+                questionIndicator.classList.add('indicator_that_was_correct');
+            } else {
+                questionIndicator.classList.remove('indicator_that_was_correct');
+                questionIndicator.classList.add('indicator_that_was_wrong');
+            }
+
+            if(nextQuestionExists){
+               requestQuestion("next_question");
+            } else {
+                console.log(nextQuestionExists);
+                quizWasFinished = true;
+                defineShowResultsVisibility(nextQuestionExists);
+            }
+
+        }
+    });
+
+    containerQuestionIndicationsMapping.forEach((mapping) => {
+        console.log(mapping);
     });
 }
 
@@ -203,42 +275,33 @@ const requestQuestion = (previousOrNextQuestion) => {
 
         indexQuestion = nextQuestion;
 
-        defineButtonPreviousAndNextVisibility(data.next_question_exists);
+//        defineButtonPreviousAndNextVisibility(data.next_question_exists);
+        if(data.next_question_exists){
+            defineShowResultsVisibility(data.next_question_exists);
+        }
 
-        defineShowResultsVisibility(data.next_question_exists);
-        defineNewQuestionAndAnswers(data.question);
+        console.log(data)
+        defineNewQuestionAndAnswers(data.question,nextQuestion,data.next_question_exists);
 
         markPreviouslySelectedOption();
 
-        captureNumberOfQuestions();
+        captureNumberOfQuestions(false);
 
         titleQuiz.textContent = `${data.title_quiz}`;
     });
 }
 
-const defineButtonPreviousAndNextVisibility = (exists) =>{
-    if(indexQuestion == 1){
-        buttonPreviousQuestion.classList.add("hide");
-    } else {
-        buttonPreviousQuestion.classList.remove("hide");
-    }
-
-    if(!exists){
-        buttonNextQuestion.classList.add("hide");
-    } else {
-        buttonNextQuestion.classList.remove("hide");
-    }
-}
-
 const defineShowResultsVisibility = (exists)=>{
     if(!exists){
+        restartQuizButton.classList.remove("hide");
         showResultsButton.classList.remove("hide");
     } else {
+        restartQuizButton.classList.add("hide");
         showResultsButton.classList.add("hide");
     }
 }
 
-const defineNewQuestionAndAnswers = (question) => {
+const defineNewQuestionAndAnswers = (question, nextQuestionForIndicationContainer,nextQuestionExists) => {
     const containerQuestionOptions = document.querySelectorAll(".container_question_options");
 
     // Defining question text
@@ -265,16 +328,21 @@ const defineNewQuestionAndAnswers = (question) => {
         // Creating container children
         const textSpan = document.createElement("span");
         textSpan.textContent = option.description;
+        textSpan.classList.add("span_text_option")
         textSpan.id = `span_${questionId}_${option.id}`;
 
         const radioButton = document.createElement("input");
         radioButton.classList.add("question_answer_option");
-        radioButton.id = `${questionId}_${option.id}`;
+        radioButton.id = `${questionId}_${option.id}_${nextQuestionForIndicationContainer}`;
         radioButton.setAttribute("type","radio");
         radioButton.setAttribute("name","question");
         radioButton.classList.add("hide");
 
-        radioButton.addEventListener("change",processChangedOption);
+        radioButton.addEventListener("change",function(e){
+            if(!quizWasFinished){
+                processChangedOption(e, nextQuestionExists);
+            }
+        });
 
         // Adding children elements to container
         newContainerQuestionOption.appendChild(radioButton);
@@ -296,7 +364,6 @@ $(function(){
             contentFeedback.classList.add("hidden_content_feedback");
             warningOfNotInsufficientAnsweredQuestions.classList.add("hidden_warning_of_not_answered");
             requestQuestion("previous_question");
-
         }
     });
 });
@@ -308,7 +375,7 @@ $(function(){
     });
 });
 
-captureNumberOfQuestions();
+captureNumberOfQuestions(true);
 
 showResultsButton?.addEventListener("click", processResults);
 

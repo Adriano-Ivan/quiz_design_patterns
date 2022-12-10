@@ -1,8 +1,16 @@
 
 .container_questions {
     display: flex;
-    justify-content: space-between;
-    min-width: 550px;
+
+}
+
+.container_question_options {
+    margin: 10px;
+
+}
+
+.container_question_indication {
+    display: flex;
 }
 
 .question_answer_option{
@@ -11,9 +19,11 @@
 
 .picked_option{
     border: 1px solid #0f0;
+
+}
+.span_text_option{
     padding: 5px;
 }
-
 .hide {
     display: none;
 }
@@ -33,4 +43,17 @@
 
 .hidden_content_feedback {
     display: none;
+}
+
+.indicator_that_was_correct{
+    background-color: green;
+    color: #fff;
+}
+
+.indicator_that_was_wrong{
+    background-color: red;
+    color: #fff;
+}
+
+.span_question_indication{
 }

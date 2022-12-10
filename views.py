@@ -13,6 +13,7 @@ def index():
     return render_template("quiz.html")
 
 
+# para o possível caso de o usuário poder voltar para perguntas anteriores
 @app.route("/previous_question", methods=["POST"])
 def previous_question():
     next_question_req = int(request.form["previous_question"])
