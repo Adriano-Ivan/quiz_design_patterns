@@ -5,6 +5,7 @@ let numberOfQuestions = 0;
 let quizWasSelected = false;
 let containerQuestionIndicationsMapping = [];
 let quizWasFinished = false;
+let currentQuizString = "";
 
 // DOM Elements
 const containerQuiz = document.querySelector("#container_quiz");
@@ -89,6 +90,32 @@ const toggleQuizWasNotSelectedMessage = () => {
     }
 }
 
+const changeQuizAndApplyModifications = (c) => {
+      currentQuizString = c;
+      var changeQuiz = $.post("/change_quiz", {"quiz_type": c});
+      quizWasFinished = false;
+      removeQuestionIndications();
+
+      changeQuiz.done(function(data){
+        if(data.type !== null){
+            correctAnswers = [];
+            indexQuestion = 0;
+            numberOfQuestions = 0;
+
+            requestQuestion("next_question");
+
+            quizWasSelected = true;
+
+            toggleQuizWasNotSelectedMessage();
+        }
+      });
+
+      captureNumberOfQuestions(true);
+      contentFeedback.classList.add("hidden_content_feedback");
+      warningOfNotInsufficientAnsweredQuestions.classList.add("hidden_warning_of_not_answered");
+      containerQuiz.classList.remove("hide");
+}
+
 const showQuizOptions = () => {
     var dataQuizTypes = $.get("/list_quizes");
 
@@ -111,28 +138,7 @@ const showQuizOptions = () => {
         typeQuizChild.textContent = `${quizTypes[c]}`;
 
         typeQuizChild.addEventListener("click", function(e){
-              var changeQuiz = $.post("/change_quiz", {"quiz_type": c});
-              quizWasFinished = false;
-              removeQuestionIndications();
-
-              changeQuiz.done(function(data){
-                if(data.type !== null){
-                    correctAnswers = [];
-                    indexQuestion = 0;
-                    numberOfQuestions = 0;
-
-                    requestQuestion("next_question");
-
-                    quizWasSelected = true;
-
-                    toggleQuizWasNotSelectedMessage();
-                }
-              });
-
-              captureNumberOfQuestions(true);
-              contentFeedback.classList.add("hidden_content_feedback");
-              warningOfNotInsufficientAnsweredQuestions.classList.add("hidden_warning_of_not_answered");
-              containerQuiz.classList.remove("hide");
+             changeQuizAndApplyModifications(c);
         });
 
         optionsQuiz.appendChild(typeQuizChild);
@@ -378,6 +384,9 @@ $(function(){
 captureNumberOfQuestions(true);
 
 showResultsButton?.addEventListener("click", processResults);
+restartQuizButton?.addEventListener("click", function(e){
+    changeQuizAndApplyModifications(currentQuizString);
+});
 
 showQuizOptions();
 //changeQuizButton.addEventListener("click", showQuizOptions);
