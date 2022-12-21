@@ -13,9 +13,6 @@ const showResultsButton = document.querySelector("#show_results_button");
 const restartQuizButton = document.querySelector("#restart_quiz_button");
 const questionOptions = document.querySelector("#question_options");
 
-//const buttonNextQuestion = document.querySelector("#button_next_question");
-//const buttonPreviousQuestion = document.querySelector("#button_previous_question");
-
 const warningOfNotInsufficientAnsweredQuestions = document.querySelector("#warning_of_not_answered");
 const contentFeedback = document.querySelector("#content_feedback");
 
@@ -147,15 +144,33 @@ const showQuizOptions = () => {
     });
 }
 
-const definePickedOptionAppearance =  (question_id, option_id) =>{
-    const pickedOption = document.querySelector(".picked_option");
+const definePickedOptionAppearance =  (is_correct,question_id, option_id) =>{
+    if(is_correct === undefined){
+        const pickedOption = document.querySelector(".picked_option");
 
-    if(pickedOption){
-        pickedOption.classList.remove("picked_option");
+        if(pickedOption){
+            pickedOption.classList.remove("picked_option");
+        }
+
+        const selectedOptionToMark = document.querySelector(`#span_${question_id}_${option_id}`);
+        selectedOptionToMark.classList.add("picked_option");
+    } else {
+        let wrongOrCorrect = is_correct ? 'picked_option_correct' :'picked_option_incorrect';
+        let pickedOption = document.querySelector( wrongOrCorrect );
+
+        if(!pickedOption){
+            pickedOption = document.querySelector( '.picked_option' );
+            pickedOption?.classList.remove('picked_option');
+        }
+
+        if(pickedOption){
+            pickedOption.classList.remove( wrongOrCorrect );
+        }
+
+        const selectedOptionToMark = document.querySelector(`#span_${question_id}_${option_id}`);
+        selectedOptionToMark.classList.add( wrongOrCorrect );
     }
 
-    const selectedOptionToMark = document.querySelector(`#span_${question_id}_${option_id}`);
-    selectedOptionToMark.classList.add("picked_option");
 }
 
 const markPreviouslySelectedOption = () => {
@@ -173,7 +188,7 @@ const markPreviouslySelectedOption = () => {
             if(questionId == correctAnswers[j].question_id && answerId == correctAnswers[j].answer_id){
                 optionsWasFound = true;
                 options[i].checked = true;
-                definePickedOptionAppearance(questionId, answerId);
+                definePickedOptionAppearance(undefined,questionId, answerId);
                 break;
             }
         }
@@ -230,11 +245,12 @@ const processChangedOption = (e,nextQuestionExists) => {
     const optionIdFromInput = e.target.id.split("_")[1];
     const nextQuestionFromInput = e.target.id.split("_")[2];
 
-    definePickedOptionAppearance(questionIdFromInput,optionIdFromInput );
+
 
     var verify = $.post("/verify_answer", {"question_id": questionIdFromInput, "option_id":optionIdFromInput});
 
     verify.done(function(data){
+        definePickedOptionAppearance(data.is_correct,questionIdFromInput,optionIdFromInput );
         updateAuxListForCorrectAndWrongAnswers(data.is_correct,data.description,questionIdFromInput,optionIdFromInput);
 
         updateQuestionIndicationContainer(nextQuestionFromInput,data.is_correct,nextQuestionExists);

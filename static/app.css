@@ -1,7 +1,7 @@
 
 .container_questions {
     display: flex;
-
+    flex-direction:column;
 }
 
 .container_question_options {
@@ -21,6 +21,17 @@
     border: 1px solid #0f0;
 
 }
+
+.picked_option_correct{
+    border: 1px solid #0f0;
+
+}
+
+.picked_option_incorrect{
+    border: 1px solid #f00;
+
+}
+
 .span_text_option{
     padding: 5px;
 }
