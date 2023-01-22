@@ -245,8 +245,6 @@ const processChangedOption = (e,nextQuestionExists) => {
     const optionIdFromInput = e.target.id.split("_")[1];
     const nextQuestionFromInput = e.target.id.split("_")[2];
 
-
-
     var verify = $.post("/verify_answer", {"question_id": questionIdFromInput, "option_id":optionIdFromInput});
 
     verify.done(function(data){

@@ -24,16 +24,21 @@
 
 .picked_option_correct{
     border: 1px solid #0f0;
-
+    border-radius: 8px;
+    background-color: green;
+    color: #fff;
 }
 
 .picked_option_incorrect{
     border: 1px solid #f00;
-
+    border-radius: 8px;
+    background-color: #f00;
+    color:#fff;
 }
 
 .span_text_option{
     padding: 5px;
+    border: 1px solid #ccc;
 }
 .hide {
     display: none;
@@ -46,6 +51,7 @@
 
 .correct_answer {
     background-color:#0f0;
+        border-radius: 8px;
 }
 
 .hidden_warning_of_not_answered{
@@ -59,6 +65,7 @@
 .indicator_that_was_correct{
     background-color: green;
     color: #fff;
+
 }
 
 .indicator_that_was_wrong{
@@ -67,4 +74,12 @@
 }
 
 .span_question_indication{
+
+    padding: 8px;
+    border: 1px solid #000;
+    margin: 8px;
+}
+
+.show_results_button,.restart_quiz_button{
+    margin: 10px;
 }

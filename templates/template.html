@@ -17,8 +17,15 @@
         </div>
         {% block content %} {% endblock %}
     </div>
+    <div style="padding: 25px;">
+           <span
+                   style="margin: 10px;margin-top: 18px;"
+                   id="quiz_was_not_selected_message"
+                   class="alert alert-warning">
+               Escolha um quiz acima
+           </span>
+    </div>
 
-    <span id="quiz_was_not_selected_message">Escolha um quiz acima</span>
      <script type="text/javascript" src="{{ url_for('static', filename='jquery.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='aux_content.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='app.js') }}"></script>
