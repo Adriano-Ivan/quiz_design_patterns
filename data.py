@@ -22,12 +22,12 @@ class QuizDataAccessor:
 
         return cls._instance
 
-    def _define_data(cls):
+    def _define_data(self):
 
         arq = open("source.json", "r", encoding="utf-8")
         quiz_list_data = json.load(arq)
 
-        if len(cls._quiz_list) == 0:
+        if len(self._quiz_list) == 0:
             for quiz in quiz_list_data:
                 quiz_object = quiz
 
@@ -79,10 +79,10 @@ class QuizDataAccessor:
 
                 quiz_to_insert = Quiz(quiz_id, quiz_title, quiz_questions)
                 quiz_to_insert.category_quiz = category_quiz
-                cls._quiz_list.append(quiz_to_insert)
+                self._quiz_list.append(quiz_to_insert)
 
-    def get_data(cls):
-        return cls._quiz_list
+    def get_data(self):
+        return self._quiz_list
 
 
 # Factory pattern
