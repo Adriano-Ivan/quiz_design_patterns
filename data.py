@@ -5,10 +5,70 @@ from models import Level, QuizTheme
 current_type = QuizTheme.GREEK_MITHOLOGY
 current_quiz_obj = None
 
+# Factory
+class QuizFactory():
+    @staticmethod
+    def create(quiz):
+        quiz_object = quiz
+
+        quiz_id = quiz_object['id']
+        quiz_title = quiz_object['title']
+        quiz_questions = []
+
+        category_quiz = None
+
+        if quiz_object['category_quiz'] == 1:
+            category_quiz = QuizTheme.GREEK_MITHOLOGY
+
+        if quiz_object['category_quiz'] == 2:
+            category_quiz = QuizTheme.LITERATURE
+
+        if quiz_object['category_quiz'] == 3:
+            category_quiz = QuizTheme.PROGRAMMING
+
+        for question in quiz_object['questions']:
+            question_id = question['id']
+            question_quiz_id = question['quiz_id']
+            question_content = question['question_content']
+
+            question_level = None
+            question_level_int = question['level']
+            question_answer_options = []
+
+            if question_level_int == 1:
+                question_level = Level.EASY
+            elif question_level_int == 2:
+                question_level = Level.MEDIUM
+            elif question_level_int == 3:
+                question_level = Level.DIFFICULT
+            elif question_level_int == 4:
+                question_level = Level.SUPER_CHALLENGE
+
+            for answer_option in question['answer_options']:
+                answer_option_to_insert = AnswerOption(
+                    answer_option["id"], answer_option["description"],
+                    answer_option["is_right_answer"], answer_option["question_id"]
+                )
+
+                question_answer_options.append(answer_option_to_insert)
+
+            question_to_insert = Question(question_id, question_quiz_id,
+                                          question_level, question_content, question_answer_options)
+
+            quiz_questions.append(question_to_insert)
+
+        quiz_to_insert = Quiz(quiz_id, quiz_title, quiz_questions)
+
+        quiz_to_insert.category_quiz = category_quiz
+
+        return quiz_to_insert
+
+
 # Singleton pattern
 class QuizDataAccessor:
 
     _instance = None
+
     _quiz_list = []
 
     def __init__(self):
@@ -29,64 +89,15 @@ class QuizDataAccessor:
 
         if len(self._quiz_list) == 0:
             for quiz in quiz_list_data:
-                quiz_object = quiz
-
-                quiz_id = quiz_object['id']
-                quiz_title = quiz_object['title']
-                quiz_questions = []
-
-                category_quiz = None
-
-                if quiz_object['category_quiz'] == 1:
-                    category_quiz = QuizTheme.GREEK_MITHOLOGY
-
-                if quiz_object['category_quiz'] == 2:
-                    category_quiz = QuizTheme.LITERATURE
-
-                if quiz_object['category_quiz'] == 3:
-                    category_quiz = QuizTheme.PROGRAMMING
-
-                for question in quiz_object['questions']:
-                    question_id = question['id']
-                    question_quiz_id = question['quiz_id']
-                    question_content = question['question_content']
-
-                    question_level = None
-                    question_level_int = question['level']
-                    question_answer_options = []
-
-                    if question_level_int == 1:
-                        question_level = Level.EASY
-                    elif question_level_int == 2:
-                        question_level = Level.MEDIUM
-                    elif question_level_int == 3:
-                        question_level = Level.DIFFICULT
-                    elif question_level_int == 4:
-                        question_level = Level.SUPER_CHALLENGE
-
-                    for answer_option in question['answer_options']:
-                        answer_option_to_insert = AnswerOption(
-                            answer_option["id"], answer_option["description"],
-                            answer_option["is_right_answer"], answer_option["question_id"]
-                        )
-
-                        question_answer_options.append(answer_option_to_insert)
-
-                    question_to_insert = Question(question_id, question_quiz_id,
-                                                  question_level, question_content, question_answer_options)
-
-                    quiz_questions.append(question_to_insert)
-
-                quiz_to_insert = Quiz(quiz_id, quiz_title, quiz_questions)
-                quiz_to_insert.category_quiz = category_quiz
+                quiz_to_insert = QuizFactory.create(quiz)
                 self._quiz_list.append(quiz_to_insert)
 
     def get_data(self):
         return self._quiz_list
 
 
-# Factory pattern
-class QuizFactory:
+# Facade pattern
+class QuizFacade:
     @staticmethod
     def return_quiz(type_quiz):
         quiz_to_choose = None
@@ -105,7 +116,7 @@ def change_quiz_with_new_type(received_type):
         if member.name == received_type:
             new_theme = QuizTheme[received_type]
             global current_quiz_obj
-            current_quiz_obj = QuizFactory.return_quiz(new_theme)
+            current_quiz_obj = QuizFacade.return_quiz(new_theme)
 
             global current_type
             current_type = new_theme
@@ -117,8 +128,8 @@ def change_quiz_with_new_type(received_type):
 
 def current_quiz():
     global current_quiz_obj
-    current_quiz_to_define = QuizFactory.return_quiz(current_type
-                                                     if current_type is not None else QuizTheme.GREEK_MITHOLOGY )
+    current_quiz_to_define = QuizFacade.return_quiz(current_type
+                                                     if current_type is not None else QuizTheme.GREEK_MITHOLOGY)
 
     if current_quiz_to_define is not None:
         current_quiz_obj = current_quiz_to_define
